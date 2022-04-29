@@ -11,9 +11,8 @@ int fmax(int arr[], int len) {
 
 int main() {
 	setlocale(0, "");
-	int len;
-	int n = 0;
 
+	int len;
 	cout << "Размер массива: ";
 	cin >> len;
 	int* arr = new int[len];
