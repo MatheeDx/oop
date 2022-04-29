@@ -1,0 +1,96 @@
+#include <iostream>
+
+using namespace std;
+class fraction {
+private:
+	int num;
+	int den;
+public:
+	fraction() {}
+	fraction(int n, int d) : num(n), den(d) { }
+
+	void get() {
+		char slash;
+		cout << "Введите дробь: ";
+		cin >> num >> slash >> den;
+	}
+	void show() {
+		cout << "Результат: " << num << '/' << den << endl;
+	}
+	void add(fraction f1, fraction f2) {
+		num = f1.num * f2.den + f2.num * f1.den;
+		den = f1.den * f2.den;
+		lowterms();
+	}
+	void sub(fraction f1, fraction f2) {
+		num = f1.num * f2.den - f2.num * f1.den;
+		den = f1.den * f2.den;
+		lowterms();
+	}
+	void mul(fraction f1, fraction f2) {
+		num = f1.num * f2.num;
+		den = f1.den * f2.den;
+		lowterms();
+	}
+	void div(fraction f1, fraction f2) {
+		num = f1.num * f2.den;
+		den = f1.den * f2.num;
+		lowterms();
+	}
+	void lowterms();
+};
+
+void fraction::lowterms() {
+	long tnum, tden, temp, gcd;
+	tnum = labs(num);
+	tden = labs(den);
+
+	if (tden == 0) {
+		cout << "Недопустимый знаменатель!";
+		exit(1);
+	}
+	else if (tnum == 0) {
+		num = 0; den = 1;
+		return;
+	}
+
+	while (tnum != 0) {
+		if (tnum < tden) {
+			temp = tnum;
+			tnum = tden;
+			tden = temp;
+		}
+
+		tnum = tnum - tden;
+	}
+	gcd = tden;
+
+	num = num / gcd;
+	den = den / gcd;
+}
+
+int main()
+{
+	int len;      
+	int n = 0;
+
+	cout << "Размер массива: ";
+	cin >> len;
+	fraction* arr = new fraction[len];
+
+	cout << "Вводите числа: " << endl;
+	for (int i = 0; i < len; i++)
+		cin >> arr[i];
+
+	fraction sum(0, 1);
+	for (int j = 0; j < n; j++)
+		sum.add(sum, f[j]);
+
+	fraction average, divider(1, n);
+	average.mul(sum, divider);
+
+	cout << "\nСреднее арифметическое введенных дробей: ";
+	average.show(); cout << endl;
+
+	return 0;
+}
