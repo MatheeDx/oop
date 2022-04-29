@@ -10,6 +10,7 @@ int fmax(int arr[], int len) {
 }
 
 int main() {
+	setlocale(0, "");
 	int len;
 	int n = 0;
 
@@ -21,7 +22,7 @@ int main() {
 	for (int i = 0; i < len; i++)
 		cin >> arr[i];
 
-	int max = fmax(arr, n);
-	cout << arr[max] << " " << max << endl;
+	int max = fmax(arr, len);
+	cout << endl << arr[max] << " " << max << endl;
 	return 0;
 }
