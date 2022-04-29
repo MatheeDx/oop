@@ -2,11 +2,11 @@
 
 using namespace std;
 class fraction {
-private:
+public:
 	int num;
 	int den;
-public:
 	fraction() {}
+
 	fraction(int n, int d) : num(n), den(d) { }
 
 	void get() {
@@ -44,7 +44,6 @@ public:
 
 		if (tden == 0) {
 			cout << "Недопустимый знаменатель!";
-			exit(1);
 		}
 		else if (tnum == 0) {
 			num = 0; 
@@ -76,20 +75,17 @@ int main() {
 	cin >> len;
 	fraction* arr = new fraction[len];
 
-	cout << "Вводите числа: " << endl;
-	for (int i = 0; i < len; i++) {
-		cin >> arr[i];
-	}
+	for (int i = 0; i < len; i++)
+		arr[i].get();
 
 	fraction sum(0, 1);
 	for (int j = 0; j < len; j++)
 		sum.add(sum, arr[j]);
 
-	fraction average, divider(1, len);
-	average.mul(sum, divider);
+	float res = sum.num / sum.den;
 
 	cout << "\nСреднее арифметическое введенных дробей: ";
-	average.show(); cout << endl;
+	cout << res / len;
 
 	return 0;
 }
