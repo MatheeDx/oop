@@ -1,0 +1,51 @@
+#include <io.h>
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+class money {
+private:
+	long double sum;
+public:
+	long double mstold(char str[]) {
+		char temp[80];
+		int j = 0;
+
+		for (int i = 0; i < strlen(str); i++) {
+			char ch = str[i];
+
+			if ((ch >= '0') && (ch <= '9'))
+				temp[j++] = ch;
+			else if (ch == '.')
+				temp[j++] = ch;
+		}
+		temp[j] = '\0';
+
+		char* stop;
+
+		sum = strtold(temp, &stop);
+		return sum;
+	}
+};
+
+int main() {
+	setlocale(0, "");
+	money ms;
+	char tms[80];
+	long double res;
+	char ans;
+
+	do {
+		cout << "Введите денежную сумму (пример: '$1,234,567.99'):\n";
+		cin >> tms;
+
+		res = ms.mstold(tms);
+
+		cout << "Число типа long double: " << setiosflags(ios::fixed) << setprecision(2) << res << endl;
+
+		cout << "Продолжить (y/n)? "; 
+		cin >> ans;
+	} while (ans != 'n');
+
+	return 0;
+}
