@@ -1,0 +1,45 @@
+#include <iostream>
+using namespace std;
+
+class matrix
+{
+private:
+	static const int NROWS = 10;
+	static const int NCOLS = 10;
+	int sar[NROWS][NCOLS];
+	int mrows;
+	int mcols;
+
+public:
+	matrix(int mr, int mc) {
+		if ((mr > 0 && mr <= NROWS) && (mc > 0 && mc <= NCOLS)) {
+			mrows = mr;
+			mcols = mc;
+		}
+		else
+			cout << "Один или оба заданных размера матрицы не входят в размеры массива " << NROWS << 'x' << NCOLS << "!";
+	}
+	void putel(int irow, int icol, int el) {
+		if ((irow >= 0 && irow < mrows) && (icol >= 0 && icol < mcols))
+			sar[irow][icol] = el;
+		else
+			cout << "Ошибка, данный индекс выходит за размеры [10][10]" << endl;
+	}
+	int getel(int irow, int icol) {
+		if ((irow >= 0 && irow < mrows) && (icol >= 0 && icol < mcols))
+			return sar[irow][icol];
+		else 
+			cout << "Ошибка, данный индекс выходит за размеры [10][10]" << endl;
+	}
+};
+
+int main() {
+	setlocale(0, "");
+
+	matrix m1(3, 4); 
+	m1.putel(11, 3, 123);
+	m1.putel(2, 3, 123);
+	int е = m1.getel(2, 3);
+
+	return 0;
+}
