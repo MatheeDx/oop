@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;
+
+class safearay {
+private:
+	static const int LIMIT = 10;
+	int sar[LIMIT];       
+public:
+	void putel(int index, int el) {
+		if ((index >= 0) && (index < LIMIT))
+			sar[index] = el;
+		else
+			cout << "Запись в массив не выполнена, так как индекс " << index << " выходит за пределы 0.." << LIMIT - 1 << endl;
+	}
+	int getel(int index) {
+		if ((index >= 0) && (index < LIMIT))
+			return sar[index];
+		else
+			cout << "Элемент массива нельзя получить, так как индекс " << index << " выходит за пределы 0.." << LIMIT - 1 << endl;
+	}
+};
+
+int main() {
+	setlocale(0, "");
+
+	safearay arr;
+	arr.putel(1, 123);
+	arr.putel(-1, 123);
+	arr.putel(10, 123);
+
+	int t = arr.getel(1);
+	cout << t << endl;
+	t = arr.getel(10);
+
+	return 0;
+}
