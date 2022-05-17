@@ -1,0 +1,154 @@
+#include <io.h>
+#include <iostream>
+using namespace std;
+
+class time {
+private:
+	int hours;
+	int minutes;
+	int seconds;
+public:
+	time() : hours(0), minutes(0), seconds(0)
+	{ }
+	time(long s) {
+		secs_to_time(s);
+	}
+	time(int h, int m, int s) : hours(h), minutes(m), seconds(s)
+	{ }
+
+	void display() const {
+		cout << hours << ":" << minutes << ":" << seconds;
+	}
+
+	long time_to_secs() const {
+		return (hours * 3600 + minutes * 60 + seconds);
+	}
+
+	void secs_to_time(long s) {
+		hours = s / 3600;
+		minutes = (s % 3600) / 60;
+		seconds = (s % 3600) % 60;
+	}
+
+	void add(time t1, time t2) {
+		long totalsecs;
+		totalsecs = t1.time_to_secs() + t2.time_to_secs();
+		secs_to_time(totalsecs);
+	}
+
+	time operator+ (time t) const {
+		long totalsecs;
+		totalsecs = time_to_secs() + t.time_to_secs();
+		return time(totalsecs);
+	}
+
+	time operator- (time t) const {
+		return time(time_to_secs() - t.time_to_secs());
+	}
+
+	time operator* (float f) const {
+		return time(time_to_secs() * f);
+	}
+
+	operator float() const {
+		return time_to_secs();
+	}
+
+	time operator++ () {
+		long totalsecs, ts;
+		totalsecs = time_to_secs();
+		ts = ++totalsecs;
+		secs_to_time(totalsecs);
+		return time(ts);
+	}
+
+	time operator++ (int) {
+		long totalsecs, ts;
+		totalsecs = time_to_secs();
+		ts = totalsecs++;
+		secs_to_time(totalsecs);
+		return time(ts);
+	}
+
+	time operator-- () {
+		long totalsecs, ts;
+		totalsecs = time_to_secs();
+		ts = --totalsecs;
+		secs_to_time(totalsecs);
+		return time(ts);
+	}
+
+	time operator-- (int) {
+		long totalsecs, ts;
+		totalsecs = time_to_secs();
+		ts = totalsecs--;
+		secs_to_time(totalsecs);
+		return time(ts);
+	}
+};
+
+int main() {
+	setlocale(0, "");
+
+	class time t1(16, 30, 45),
+		t2(5, 50, 20);
+	class time t3, t4;
+
+	t3.add(t1, t2);
+
+	t4 = t1 + t2;
+
+	cout << "Результат (метод add) : ";
+	t3.display();
+	cout << endl;
+
+	cout << "Результат (оператор +): ";
+	t4.display();
+	cout << endl;
+
+	class time t5, t6;
+	t5 = ++t3;
+	t6 = t4++;
+	cout << "Результат префиксного инкремента : ";
+	t5.display();
+	cout << ", ";
+	t3.display();
+	cout << endl;
+
+	cout << "Результат постфиксного инкремента: ";
+	t6.display();
+	cout << ", ";
+	t4.display();
+	cout << endl;
+
+	t5 = --t3;
+	t6 = t4--;
+	cout << "Результат префиксного декремента : ";
+	t5.display();
+	cout << ", ";
+	t3.display();
+	cout << endl;
+
+	cout << "Результат постфиксного декремента: ";
+	t6.display();
+	cout << ", ";
+	t4.display();
+	cout << endl;
+
+	t6 = t6 - t5;
+	t3 = t5 * 0.5f;
+	t4 = 0.5f * t5;
+	cout << "Результат вычитания: ";
+	t6.display();
+	cout << endl;
+
+	cout << "Результат умножения объекта на число: ";
+	t3.display();
+	cout << endl;
+
+	cout << "Результат умножения числа на объект : ";
+	t4.display();
+	cout << endl;
+
+	return 0;
+}
