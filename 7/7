@@ -1,0 +1,128 @@
+#include <io.h>
+#include <iostream>
+using namespace std;
+
+class fraction {
+private:
+	int num;
+	int den;
+public:
+	fraction()
+	{ }
+	fraction(int n, int d) : num(n), den(d)
+	{ }
+
+	void get() {
+		char slash;
+		cout << "Введите обыкновенную дробь (в формате числитель/знаменатель): ";
+		cin >> num >> slash >> den;
+	}
+
+	void display() const {
+		cout << "Результат операции: " << num << '/' << den << endl;
+	}
+
+	fraction operator+ (fraction f) const {
+		return fraction(num * f.den + f.num * den, den * f.den).lowterms();
+	}
+
+	fraction operator- (fraction f) const {
+		return fraction(num * f.den - f.num * den, den * f.den).lowterms();
+	}
+
+	fraction operator* (fraction f) const {
+		return fraction(num * f.num, den * f.den).lowterms();
+	}
+
+	fraction operator/ (fraction f) const {
+		return fraction(num * f.den, den * f.num).lowterms();
+	}
+
+	bool operator== (fraction f) const {
+		if ((num == f.num) && (den == f.den))
+			return true;
+		else
+			return false;
+	}
+
+	bool operator!= (fraction f) const {
+		if ((num == f.num) && (den == f.den))
+			return false;
+		else
+			return true;
+	}
+
+	fraction lowterms() {
+		long tnum, tden, temp, gcd;
+
+		tnum = labs(num);
+		tden = labs(den);
+
+		if (tden == 0) {
+			cout << "Недопустимый знаменатель!"; exit(1);
+		}
+		else if (tnum == 0) {
+			num = 0;
+			den = 1;
+			return fraction(num, den);
+		}
+
+		while (tnum != 0) {
+			if (tnum < tden) {
+				temp = tnum; tnum = tden; tden = temp;
+			}
+
+			tnum = tnum - tden;
+		}
+		gcd = tden;
+
+		num = num / gcd;
+		den = den / gcd;
+
+		return fraction(num, den);
+	}
+};
+
+int main() {
+	setlocale(0, "");
+
+	fraction fr1, fr2, fr3;
+	char oper;
+	fraction fr(0, 1);
+
+	cout << "Для выхода из программы введите значение 0/1 для первой и для второй дробей.\n\n";
+
+	do {
+		fr1.get();
+		cout << "Введите знак операции (+, -, *, /): "; 
+		cin >> oper;
+		fr2.get();
+
+		if ((fr1 == fr) && (fr2 == fr))
+			break;
+
+		switch (oper) {
+		case '+':
+			fr3 = fr1 + fr2;
+			fr3.display();
+			break;
+		case '-':
+			fr3 = fr1 - fr2;
+			fr3.display();
+			break;
+		case '*':
+			fr3 = fr1 * fr2;
+			fr3.display();
+			break;
+		case '/':
+			fr3 = fr1 / fr2;
+			fr3.display();
+			break;
+		default: 
+			cout << "Введен неверный знак операции! Попробуйте еще." << endl;
+		}
+
+	} while (true);
+
+	return 0;
+}
