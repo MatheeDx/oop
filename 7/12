@@ -1,0 +1,204 @@
+#include <io.h>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+using namespace std;
+
+const double RATE = 50.0;
+
+class sterling {
+private:
+	long pounds;
+	int shillings;
+	int pences;
+public:
+	sterling() : pounds(0), shillings(0), pences(0)
+	{ }
+	sterling(double df) {
+		pounds = df;
+		shillings = (df - pounds) * 20;
+		pences = round(((df - pounds) * 20 - shillings) * 12);
+	}
+	sterling(long ps, int s, int p) : pounds(ps), shillings(s), pences(p)
+	{ }
+
+	void getSterling() {
+		char separator;
+		cout << "Введите сумму (фунты, шиллинги и пенсы через точку): £";
+		cin >> pounds >> separator >> shillings >> separator >> pences;
+	}
+
+	void putSterling() const {
+		cout << "£" << pounds << "." << shillings << "." << pences;
+	}
+
+	operator double() const {
+		return (pounds + shillings / 20.0 + pences / 240.0);
+	}
+
+	sterling operator+ (sterling s) const {
+		return sterling(double(sterling(pounds, shillings, pences)) + double(s));
+	}
+
+	sterling operator- (sterling s) const {
+		return sterling(double(sterling(pounds, shillings, pences)) - double(s));
+	}
+
+	sterling operator* (double n) const {
+		return sterling(double(sterling(pounds, shillings, pences)) * n);
+	}
+
+	double operator/ (sterling s) const {
+		return (double(sterling(pounds, shillings, pences)) / double(s));
+	}
+
+	sterling operator/ (double n) const {
+		return sterling(double(sterling(pounds, shillings, pences)) / n);
+	}
+};
+
+class bMoney {
+private:
+	long double sum;
+public:
+	bMoney()
+	{
+		sum = 0.0L;
+	}
+	explicit bMoney(long double n) : sum(n)
+	{ }
+	bMoney(const char s[])
+	{
+		mstold(s);
+	}
+
+	long double mstold(const char str[])
+	{
+		char temp[80];
+		int j = 0;
+		for (int i = 0; i < strlen(str); i++) {
+			char ch = str[i];
+
+			if ((ch >= '0') && (ch <= '9'))
+				temp[j++] = ch;
+			else if (ch == '.')
+				temp[j++] = ch;
+		}
+		temp[j] = '\0';
+
+		char* stop;
+		sum = strtold(temp, &stop);
+
+		return sum;
+	}
+	void ldtoms(char str[])
+	{
+		char ustring[80];
+		stringstream woss;
+
+		woss << setiosflags(ios::fixed) << setprecision(2) << sum;
+		woss >> ustring;
+
+		int i = 0, n = 0, j;
+		int len = strlen(ustring);
+		char delim3 = ',';
+
+		str[i++] = '$';
+
+		if (len > 6) {
+			if ((len - 3) % 3 == 2) {
+				str[i++] = ustring[n++];
+				str[i++] = ustring[n++];
+				str[i++] = delim3;
+			}
+			else if ((len - 3) % 3 == 1) {
+				str[i++] = ustring[n++];
+				str[i++] = delim3;
+			}
+		}
+
+		for (j = n; j < len - 3; j++) {
+			str[i++] = ustring[j];
+			if (((j - n + 1) % 3 == 0) && (j != len - 3 - 1))
+				str[i++] = delim3;
+		}
+
+		str[i++] = ustring[j++];
+		str[i++] = ustring[j++];
+		str[i++] = ustring[j];
+		str[i] = '\0';
+	}
+
+	void getmoney() {
+		char tms[80];
+		cout << "Введите денежную сумму (пример: '$1,234,567.99'):\n";
+		cin >> tms;
+		mstold(tms);
+	}
+
+	void putmoney() {
+		char tms[80];
+		ldtoms(tms);
+		cout << tms;
+	}
+
+	bMoney operator+ (bMoney m) const {
+		return bMoney(sum + m.sum);
+	}
+
+	bMoney operator- (bMoney m) const {
+		return bMoney(sum - m.sum);
+	}
+
+	bMoney operator* (long double n) const {
+		return bMoney(sum * n);
+	}
+
+	long double operator/ (bMoney m) const {
+		return sum / m.sum;
+	}
+
+	bMoney operator/ (long double n) const {
+		return bMoney(sum / n);
+	}
+
+	bMoney(sterling s) {
+		sum = double(s) * RATE;
+	}
+
+	operator sterling() {
+		return sterling(sum / RATE);
+	}
+};
+
+int main()
+{
+	setlocale(0, "");
+	char ans;
+	int currency;
+	bMoney sd;
+	sterling sf;
+
+	do {
+		cout << "Введите номер валюты (1 — доллар, 2 — фунт): ";
+		cin >> currency;
+
+		if (currency == 1) {
+			sd.getmoney();
+			sf = sd;
+			cout << "В старой английской системе: "; sf.putSterling();
+		}
+		else if (currency == 2) {
+			sf.getSterling();
+			sd = sf;
+			cout << "В долларах: "; sd.putmoney();
+		}
+		else
+			cout << "Ошибка, вы ввели не 1 и не 2!";
+		cout << endl;
+
+		cout << "Попробовать ещё (д/н)? "; cin >> ans; cout << endl;
+	} while (ans != 'н');
+
+	return 0;
+}
