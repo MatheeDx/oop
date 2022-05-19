@@ -1,0 +1,96 @@
+#include <io.h>
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+class sterling {
+private:
+	long pounds;
+	int shillings;
+	int pences;
+public:
+	sterling() : pounds(0), shillings(0), pences(0)
+	{ }
+	sterling(double df)
+	{
+		pounds = df;
+		shillings = (df - pounds) * 20;
+		pences = round(((df - pounds) * 20 - shillings) * 12);
+	}
+	sterling(long ps, int s, int p) : pounds(ps), shillings(s), pences(p)
+	{ }
+
+	void getSterling() {
+
+		wchar_t separator; // для точки, разделяющей фунты, шиллинги и пенсы
+		cout << "Введите сумму (фунты, шиллинги и пенсы через точку): £";
+		cin >> pounds >> separator >> shillings >> separator >> pences;
+	}
+
+	void putSterling() const {
+		cout << "£" << pounds << "." << shillings << "." << pences;
+	}
+
+	operator double() const {
+		return (pounds + shillings / 20.0 + pences / 240.0);
+	}
+
+	sterling operator+ (sterling s) const {
+		return sterling(double(sterling(pounds, shillings, pences)) + double(s));
+	}
+
+	sterling operator- (sterling s) const {
+		return sterling(double(sterling(pounds, shillings, pences)) - double(s));
+	}
+
+	sterling operator* (double n) const {
+		return sterling(double(sterling(pounds, shillings, pences)) * n);
+	}
+
+	double operator/ (sterling s) const {
+		return (double(sterling(pounds, shillings, pences)) / double(s));
+	}
+
+	sterling operator/ (double n) const {
+		return sterling(double(sterling(pounds, shillings, pences)) / n);
+	}
+};
+
+int main() {
+	sterling s1, s2, s;
+	double n;
+
+	cout << "1. "; 
+	s1.getSterling();
+	cout << "2. ";
+	s2.getSterling(); 
+	cout << endl;
+
+	cout << "1. В десятичных фунтах: " << fixed << setprecision(2) << double(s1) << endl;
+	cout << "2. В десятичных фунтах: " << fixed << setprecision(2) << double(s2) << endl << endl;
+
+	s = s1 + s2;
+	cout << "Результат сложения этих сумм: "; 
+	s.putSterling();
+	cout << endl;
+
+	s = s1 - s2;
+	cout << "Разность этих сумм: "; 
+	s.putSterling();
+	cout << endl;
+
+	s = s1 * 1.05;
+	cout << "Произведение первой суммы и числа 1,05: ";
+	s.putSterling();
+	cout << endl;
+
+	n = s1 / s2;
+	cout << "Частное от деления первой суммы на вторую: " << n << endl;
+
+	s = s1 / 3.5;
+	cout << "Частное от деления первой суммы на число 3,5: ";
+	s.putSterling();
+	cout << endl;
+
+	return 0;
+}
