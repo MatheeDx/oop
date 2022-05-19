@@ -57,6 +57,7 @@ public:
 };
 
 int main() {
+	setlocale(0, "");
 	sterling s1, s2, s;
 	double n;
 
