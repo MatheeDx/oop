@@ -1,0 +1,49 @@
+#include <io.h>
+#include <iostream>
+using namespace std;
+
+const int LIMIT = 100;
+
+class safearray {
+private:
+	int arr[LIMIT];
+	int lowerbound;
+	int upperbound;
+public:
+	safearray(int low, int up) : lowerbound(low), upperbound(up) {
+		if (lowerbound > upperbound) {
+			cout << "Ошибка! Верхняя граница индекса массива не может быть меньше нижней.\n"; 
+		}
+		if (upperbound - lowerbound >= LIMIT) {
+			cout << "Ошибка! В массиве не может быть больше " << LIMIT << " элементов.\n"; 
+		}
+	}
+	int& operator[] (int n) {
+		if (n < lowerbound || n > upperbound) {
+			cout << "Ошибочный индекс!"; 
+		}
+		return arr[n - lowerbound];
+	}
+};
+
+int main() {
+	setlocale(0, "");
+	int low, up;
+
+	cout << "Введите нижнюю границу индекса массива : "; 
+	cin >> low;
+	cout << "Введите верхнюю границу индекса массива: "; 
+	cin >> up;
+
+	safearray sa1(low, up);
+
+	for (int j = low; j <= up; j++)
+		sa1[j] = j * 10;
+
+	for (int j = low; j <= up; j++) {
+		int temp = sa1[j];
+		cout << "Элемент " << j << " равен " << temp << endl;
+	}
+
+	return 0;
+}
